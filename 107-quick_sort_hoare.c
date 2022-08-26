@@ -1,70 +1,86 @@
 #include "sort.h"
 
 /**
- * quick_sort_hoare - sorts an array with the Quicksort algorithm
- * @array: array of ints to sort
- * @size: size of the array
+ * myswapy - swaps values
+ *
+ * @array: sort data
+ * @i: first num
+ * @j: second num
+ *
+ * Return: No Return
  */
-void quick_sort_hoare(int *array, size_t size)
+void myswapy(int *array, int i, int j)
 {
-	if (size < 2)
-		return;
+	int tmp;
 
-	quick_recursion(array, 0, (int)size - 1, size);
+	tmp = array[i];
+	array[i] = array[j];
+	array[j] = tmp;
 }
 
 /**
- * quick_recursion - helper function for Quicksort
- * @array: array to sort
- * @left: index of the left element
- * @right: index of the right element
- * @size: size of the array
+ * part - sorts a partition
+ *
+ * @array: data to sort
+ * @left: left
+ * @right: right
+ * @size: size of data
+ *
+ * Return: Pivote new
  */
-void quick_recursion(int *array, int left, int right, size_t size)
+int part(int *array, int left, int right, size_t size)
 {
-	int piv;
+	int i, j, pivot = array[right];
+
+	for (i = left, j = right; 1; i++, j--)
+	{
+		while (array[i] < pivot)
+			i++;
+
+		while (array[j] > pivot)
+			j--;
+
+		if (i >= j)
+			return (i);
+		myswapy(array, i, j);
+		print_array(array, size);
+	}
+}
+
+/**
+ * myquicksort -  sorts with Quick sort algorithm Lomuto partition scheme
+ *
+ * @array: data to sort
+ * @left: left
+ * @right: right
+ * @size: size data
+ *
+ * Return: No Return
+ */
+void myquicksort(int *array, int left, int right, size_t size)
+{
+	int pivote;
 
 	if (left < right)
 	{
-		piv = partition(array, left, right, size);
-		quick_recursion(array, left, piv - 1, size);
-		quick_recursion(array, piv, right, size);
+		pivote = part(array, left, right, size);
+		myquicksort(array, left, pivote - 1, size);
+		myquicksort(array, pivote, right, size);
 	}
 }
 
 /**
- * partition - gives a piv index for Quicksort
- * @array: array to find the piv in
- * @left: index of the left element
- * @right: index of the right element
- * @size: size of the array
+ * quick_sort_hoare -  sorts an array withh Quick sort algorithm Hoare
  *
- * Return: the index of the piv element
+ * @array: data to sort
+ * @size: size of data
+ *
+ * Return: No Return
  */
-int partition(int *array, int left, int right, size_t size)
+void quick_sort_hoare(int *array, size_t size)
 {
-	int tmp, pivot = array[right];
-	size_t i, j;
+	if (!array || size < 2)
+		return;
 
-	i = left - 1;
-	j = right + 1;
-	while (1)
-	{
-		do {
-			i++;
-		} while (array[i] < pivot);
-		do {
-			j--;
-		} while (array[j] > pivot);
-		if (i >= j)
-			return (i);
-		if (i != j)
-		{
-			tmp = array[i];
-			array[i] = array[j];
-			array[j] = tmp;
-			print_array(array, size);
-		}
-	}
-	return (0);
+	myquicksort(array, 0, size - 1, size);
 }
